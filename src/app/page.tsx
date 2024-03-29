@@ -1,6 +1,16 @@
 "use client";
 
+import TodoItem from "@/components/TodoItem";
 import useTodo from "@/hooks/useTodo";
+import {
+  Button,
+  Container,
+  Grid,
+  List,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 export default function Home() {
   const {
@@ -15,42 +25,44 @@ export default function Home() {
   } = useTodo();
   return (
     <main>
-      <form onSubmit={handleAddTodo}>
-        <input
-          name="todo-title"
-          required
-          ref={inputRef}
-          placeholder="What are you up to?"
-        />
-        <button type="submit">ADD</button>
-      </form>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            {editableTodoId === todo.id ? (
-              <input
-                autoFocus
-                type="text"
-                value={todo.title}
-                onChange={(event) => updateTodo(todo.id, event.target.value)}
-                onBlur={() => {
-                  setEditableTodoId(null);
-                  deleteTodo(todo.id);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key == "Enter") {
-                    event.preventDefault();
-                    setEditableTodoId(null);
-                  }
-                }}
+      <Container maxWidth="sm" sx={{ paddingBlock: "10rem" }}>
+        <form onSubmit={handleAddTodo}>
+          <Stack direction={"row"} width={"100%"} spacing={"1rem"}>
+            <TextField
+              fullWidth
+              name="todo-title"
+              required
+              inputRef={inputRef}
+              label="Your Todo"
+              variant="standard"
+            />
+            <Button variant="contained" type="submit">
+              ADD
+            </Button>
+          </Stack>
+        </form>
+        {todos.length ? (
+          <List sx={{ mt: "2rem", maxHeight: "30rem", overflowY: "auto" }}>
+            {todos.map((todo) => (
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                editableTodoId={editableTodoId}
+                updateTodo={updateTodo}
+                deleteTodo={deleteTodo}
+                setEditableTodoId={setEditableTodoId}
+                handleEditTodo={handleEditTodo}
               />
-            ) : (
-              <span onClick={() => handleEditTodo(todo.id)}>{todo.title}</span>
-            )}
-            <button onClick={() => deleteTodo(todo.id)}>delete</button>
-          </li>
-        ))}
-      </ul>
+            ))}
+          </List>
+        ) : (
+          <Grid height={"100%"} width={"100%"} mt={"2rem"}>
+            <Typography textAlign={"center"} color={"GrayText"}>
+              No Todos Yet!
+            </Typography>
+          </Grid>
+        )}
+      </Container>
     </main>
   );
 }

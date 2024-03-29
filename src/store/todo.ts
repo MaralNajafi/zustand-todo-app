@@ -2,7 +2,7 @@ import { TodoState } from "@/types/todoStore";
 import { create } from "zustand";
 
 export const useTodoStore = create<TodoState>((set) => ({
-  todos: [{ id: "1", title: "study more" }],
+  todos: [],
   add: (todo) => set((state) => ({ todos: [...state.todos, todo] })),
   update: (id, editedTitle) =>
     set((state) => ({
